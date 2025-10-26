@@ -1,0 +1,32 @@
+name: 'Generate Documentation'
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  docs:
+    name: 'Generate Docs'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Generate terraform docs
+      uses: terraform-docs/gh-actions@v1
+      with:
+        working-dir: .
+        output-file: README.md
+        output-method: inject
+        
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md
+        git diff --staged --quiet || git commit -m "docs: Update terraform documentation"
+        git push
