@@ -1,0 +1,456 @@
+# Terraform files
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfplan
+.terraformrc
+terraform.rc
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude all .tfvars files, which are likely to contain sensitive data
+*.tfvars
+*.tfvars.json
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Include override files you do wish to add to version control using negated pattern
+# !example_override.tf
+
+# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+# example: *tfplan*
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Ignore Mac .DS_Store files
+.DS_Store
+
+# Ignore vim temporary files
+*.swp
+*.swo
+*~
+
+# Ignore emacs temporary files
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Ignore VS Code settings
+.vscode/
+*.code-workspace
+
+# Ignore JetBrains IDEs
+.idea/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+
+# Ignore Sublime Text settings
+*.sublime-workspace
+*.sublime-project
+
+# Ignore Atom settings
+.atom/
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.log
+*.bak
+*.orig
+
+# Ignore OS generated files
+Thumbs.db
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Ignore environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore lock files
+package-lock.json
+yarn.lock
+composer.lock
+Pipfile.lock
+
+# Ignore node_modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore Python files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Ignore virtual environments
+.venv/
+venv/
+ENV/
+env/
+.env/
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Ignore Azure CLI config
+.azure/
+
+# Ignore AWS CLI config
+.aws/
+
+# Ignore GCP CLI config
+.config/gcloud/
+
+# Ignore Docker files
+.dockerignore
+
+# Ignore Kubernetes config
+.kube/
+
+# Ignore Helm charts
+charts/
+*.tgz
+
+# Ignore local development files
+local/
+.local/
+dev/
+.dev/
+test-results/
+coverage/
+.coverage
+.nyc_output
+
+# Ignore certificate files
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Ignore SSH keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# Ignore backup files
+*.backup
+*.back
+*.orig
+*.save
+
+# Ignore compressed files
+*.zip
+*.tar
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.rar
+*.7z
+
+# Ignore image files (if not needed in repo)
+# *.jpg
+# *.jpeg
+# *.png
+# *.gif
+# *.bmp
+# *.tiff
+# *.ico
+
+# Ignore video files
+# *.mp4
+# *.avi
+# *.mov
+# *.wmv
+# *.flv
+
+# Ignore audio files
+# *.mp3
+# *.wav
+# *.flac
+# *.aac
+
+# Ignore Office files (if temporary)
+~$*.docx
+~$*.xlsx
+~$*.pptx
+*.tmp
+
+# Ignore cache directories
+.cache/
+.npm/
+.yarn/
+.pip/
+
+# Ignore build artifacts
+target/
+out/
+bin/
+obj/
+release/
+debug/
+
+# Ignore Ansible files
+*.retry
+.ansible/
+
+# Ignore Chef files
+.chef/
+Berksfile.lock
+
+# Ignore Puppet files
+.puppet/
+
+# Ignore Vagrant files
+.vagrant/
+*.box
+
+# Ignore Packer files
+packer_cache/
+*.qcow2
+*.vmdk
+*.vdi
+
+# Ignore Consul files
+.consul/
+
+# Ignore Vault files
+.vault/
+
+# Ignore monitoring files
+prometheus.yml.backup
+grafana.db
+
+# Ignore benchmark results
+*.bench
+
+# Ignore profiling data
+*.prof
+*.pprof
+
+# Ignore trace files
+*.trace
+
+# Ignore core dumps
+core
+core.*
+
+# Ignore PID files
+*.pid
+
+# Ignore socket files
+*.sock
+
+# Ignore FIFO files
+*.fifo
+
+# Ignore database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# Ignore configuration override files
+config.local.json
+config.local.yaml
+config.local.yml
+settings.local.json
+appsettings.local.json
+
+# Ignore temporary directories
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Ignore user-specific files
+.user
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore Visual Studio files
+*.suo
+*.sln.docstates
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Ignore IntelliJ IDEA files
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Ignore Eclipse files
+.metadata
+.classpath
+.project
+.settings/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+
+# Ignore NetBeans files
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Ignore CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Ignore autotools files
+autom4te.cache/
+config.log
+config.status
+configure
+Makefile.in
+aclocal.m4
+
+# Ignore LaTeX files
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+*.lb
+
+# Ignore R files
+.Rhistory
+.RData
+.Ruserdata
+
+# Ignore MATLAB files
+*.asv
+*.mex*
+
+# Ignore SAS files
+*.sas7bdat
+*.sas7bcat
+
+# Ignore Stata files
+*.dta
+
+# Ignore SPSS files
+*.sav
+*.por
+
+# Ignore large data files
+*.csv.gz
+*.json.gz
+*.parquet
+*.h5
+*.hdf5
+
+# Ignore backup directories
+*_backup/
+*_old/
+*_archive/
+
+# Ignore merge conflict files
+*.orig
+*.rej
+
+# Ignore patch files
+*.patch
+*.diff
+
+# Ignore ctags files
+tags
+TAGS
+
+# Ignore grep results
+GPATH
+GRTAGS
+GSYMS
+GTAGS
+
+# Ignore security scan results
+.semgrep/
+.bandit
+.safety
+
+# Ignore dependency check results
+dependency-check-report.html
+dependency-check-junit.xml
+
+# Ignore license check results
+license-report.html
