@@ -54,7 +54,7 @@ jobs:
       run: terraform init -backend=false
       
     - name: Run Checkov
-      uses: bridgecrewio/checkov-action@v2.0.850
+      uses: bridgecrewio/checkov-action@v12.1347.0
       with:
         directory: .
         framework: terraform
