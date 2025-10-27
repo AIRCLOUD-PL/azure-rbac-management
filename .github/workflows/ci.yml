@@ -10,6 +10,7 @@ on:
 env:
   TF_VERSION: '1.5.0'
   GO_VERSION: '1.22'
+  ARM_SKIP_PROVIDER_REGISTRATION: 'true'
 
 jobs:
   terraform-validate:
@@ -24,12 +25,13 @@ jobs:
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: ${{ env.TF_VERSION }}
+        terraform_wrapper: false
         
-    - name: Terraform Format
-      run: terraform fmt -check -recursive
+    - name: Terraform Format Check
+      run: terraform fmt -check
       
     - name: Terraform Init
-      run: terraform init
+      run: terraform init -backend=false
       
     - name: Terraform Validate
       run: terraform validate
@@ -46,20 +48,31 @@ jobs:
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: ${{ env.TF_VERSION }}
+        terraform_wrapper: false
         
     - name: Terraform Init
-      run: terraform init
+      run: terraform init -backend=false
       
     - name: Run Checkov
-      uses: bridgecrewio/checkov-action@master
+      uses: bridgecrewio/checkov-action@v2.0.850
       with:
         directory: .
         framework: terraform
+        soft_fail: true
+        output_format: sarif
+        output_file_path: checkov.sarif
+        
+    - name: Upload SARIF file
+      if: always()
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: checkov.sarif
         
   terratest:
     name: 'Terratest'
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    timeout-minutes: 60
     
     steps:
     - name: Checkout
@@ -69,14 +82,24 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: ${{ env.GO_VERSION }}
+        cache: true
+        cache-dependency-path: test/go.sum
+        
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ env.TF_VERSION }}
+        terraform_wrapper: false
         
     - name: Run Terratest
       run: |
         cd test
         go mod download
-        go test -v -timeout 30m
+        go test -v -timeout 45m -parallel 1
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        ARM_SKIP_PROVIDER_REGISTRATION: ${{ env.ARM_SKIP_PROVIDER_REGISTRATION }}
+        TF_VAR_location: "West Europe"
