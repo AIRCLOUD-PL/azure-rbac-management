@@ -12,51 +12,17 @@ jobs:
   release:
     name: 'Create Release'
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        
-    - name: Generate changelog
-      id: changelog
-      run: |
-        # Get the previous tag
-        PREV_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
-        
-        # Generate changelog
-        if [ -n "$PREV_TAG" ]; then
-          CHANGELOG=$(git log --pretty=format:"- %s" ${PREV_TAG}..HEAD)
-        else
-          CHANGELOG=$(git log --pretty=format:"- %s")
-        fi
-        
-        # Set output
-        echo "changelog<<EOF" >> $GITHUB_OUTPUT
-        echo "$CHANGELOG" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-        
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref_name }}
-        release_name: Release ${{ github.ref_name }}
-        draft: false
-        prerelease: false
-        body: |
-          ## Changes in ${{ github.ref_name }}
-          
-          ${{ steps.changelog.outputs.changelog }}
-          
-          ## Usage
-          
-          ```hcl
-          module "example" {
-            source = "github.com/${{ github.repository }}?ref=${{ github.ref_name }}"
-            
-            # Add your variables here
-          }
-          ```
+      # Idempotent: a release created by hand (gh release create) is left untouched,
+      # a plain tag push gets a release with GitHub-generated notes.
+      - name: Create release if it does not exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $TAG already exists - nothing to do."
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TAG" --generate-notes --verify-tag
+          fi
