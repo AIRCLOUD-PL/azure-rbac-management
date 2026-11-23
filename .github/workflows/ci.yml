@@ -1,131 +1,18 @@
-name: 'Terraform CI/CD'
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1" # co tydzień: nowe reguły skanerów
   workflow_dispatch:
 
-env:
-        TF_PLUGIN_CACHE_DIR: ~/.terraform.d/plugin-cache
-  TF_VERSION: '1.5.0'
-  GO_VERSION: '1.22'
-  ARM_SKIP_PROVIDER_REGISTRATION: 'true'
+permissions:
+  contents: read
+  security-events: write
 
 jobs:
-  terraform-validate:
-    name: 'Terraform Validate'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        terraform-version: ["1.5.7", "1.6.6", "1.7.0"]
-    
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      - name: Cache Terraform plugins
-        uses: actions/cache@v4
-        with:
-          path: ~/.terraform.d/plugin-cache
-          key: terraform-plugins-${{ runner.os }}-${{ hashFiles("**/.terraform.lock.hcl") }}
-      with:
-        terraform_version: ${{ env.TF_VERSION }}
-        terraform_wrapper: false
-        
-    - name: Terraform Format Check
-      run: terraform fmt -check
-      
-    - name: Terraform Init
-      run: terraform init -backend=false
-      
-    - name: Terraform Validate
-      run: terraform validate
-
-  terraform-security:
-    name: 'Security Scan'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        terraform-version: ["1.5.7", "1.6.6", "1.7.0"]
-    
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      - name: Cache Terraform plugins
-        uses: actions/cache@v4
-        with:
-          path: ~/.terraform.d/plugin-cache
-          key: terraform-plugins-${{ runner.os }}-${{ hashFiles("**/.terraform.lock.hcl") }}
-      with:
-        terraform_version: ${{ env.TF_VERSION }}
-        terraform_wrapper: false
-        
-    - name: Terraform Init
-      run: terraform init -backend=false
-      
-    - name: Run Checkov
-      uses: bridgecrewio/checkov-action@v12.1347.0
-      with:
-        directory: .
-        framework: terraform
-        soft_fail: true
-        output_format: sarif
-        output_file_path: checkov.sarif
-        
-    - name: Upload SARIF file
-      if: always()
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: checkov.sarif
-        
-  terratest:
-    name: 'Terratest'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        terraform-version: ["1.5.7", "1.6.6", "1.7.0"]
-    if: github.event_name == 'pull_request'
-    timeout-minutes: 60
-    
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: ${{ env.GO_VERSION }}
-        cache: true
-        cache-dependency-path: test/go.sum
-        
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      - name: Cache Terraform plugins
-        uses: actions/cache@v4
-        with:
-          path: ~/.terraform.d/plugin-cache
-          key: terraform-plugins-${{ runner.os }}-${{ hashFiles("**/.terraform.lock.hcl") }}
-      with:
-        terraform_version: ${{ env.TF_VERSION }}
-        terraform_wrapper: false
-        
-    - name: Run Terratest
-      run: |
-        cd test
-        go mod download
-        go test -v -timeout 45m -parallel 1
-      env:
-        TF_PLUGIN_CACHE_DIR: ~/.terraform.d/plugin-cache
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        ARM_SKIP_PROVIDER_REGISTRATION: ${{ env.ARM_SKIP_PROVIDER_REGISTRATION }}
-        TF_VAR_location: "West Europe"
+  module:
+    uses: AIRCLOUD-PL/.github/.github/workflows/terraform-module.yml@main

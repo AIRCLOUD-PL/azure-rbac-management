@@ -2,19 +2,6 @@
 # Comprehensive RBAC system with nested groups, environment separation,
 # tenant and management group support, and service principal management
 
-terraform {
-  required_version = ">= 1.4.0, < 2.0.0"
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.80.0, < 5.0.0"
-    }
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = ">= 2.30.0"
-    }
-  }
-}
 
 # Data sources
 data "azurerm_client_config" "current" {}
@@ -253,12 +240,7 @@ resource "azuread_group" "organization" {
   assignable_to_role      = true
   prevent_duplicate_names = true
 
-  dynamic "owners" {
-    for_each = var.group_owners
-    content {
-      object_id = owners.value
-    }
-  }
+  owners = var.group_owners
 }
 
 # Environment groups
@@ -271,12 +253,7 @@ resource "azuread_group" "environments" {
   assignable_to_role      = true
   prevent_duplicate_names = true
 
-  dynamic "owners" {
-    for_each = var.group_owners
-    content {
-      object_id = owners.value
-    }
-  }
+  owners = var.group_owners
 
   # Add environment groups as members of organization group
   depends_on = [azuread_group.organization]
@@ -300,12 +277,7 @@ resource "azuread_group" "user_types" {
   assignable_to_role      = true
   prevent_duplicate_names = true
 
-  dynamic "owners" {
-    for_each = var.group_owners
-    content {
-      object_id = owners.value
-    }
-  }
+  owners = var.group_owners
 
   depends_on = [azuread_group.environments]
 }
@@ -328,12 +300,7 @@ resource "azuread_group" "projects" {
   assignable_to_role      = true
   prevent_duplicate_names = true
 
-  dynamic "owners" {
-    for_each = var.group_owners
-    content {
-      object_id = owners.value
-    }
-  }
+  owners = var.group_owners
 
   depends_on = [azuread_group.user_types]
 }
